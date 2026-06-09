@@ -12,7 +12,6 @@ import {
   MapPin,
   Menu,
   Phone,
-  ScanLine,
 } from "lucide-react";
 
 const whatsappHref =
@@ -23,10 +22,18 @@ const mapSrc =
 const imagePath = (file: string) => `/images/${file}`;
 
 const navItems = [
+  ["Reformer", "reformer"],
   ["Neden Venom", "neden-venom"],
   ["AI Koç", "ai-koc"],
   ["Galeri", "galeri"],
   ["İletişim", "iletisim"]
+];
+
+const reformerBenefits = [
+  "Düşük etki, yüksek kontrol",
+  "Derin karın ve sırt gücü",
+  "Duruş ve esneklik",
+  "Her seviyeye uygun"
 ];
 
 const whyVenom = [
@@ -181,41 +188,89 @@ export default function HomePage() {
 
       <section id="top" className="relative min-h-[82vh] px-4 pt-24 sm:px-6 lg:px-8">
         <motion.div className="absolute inset-0 z-0" style={{ y: heroY }}>
-          <div className="absolute inset-0 hero-placeholder" />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.96)_0%,rgba(0,0,0,0.78)_45%,rgba(0,0,0,0.58)_100%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_26%,rgba(57,255,20,0.24),transparent_32%),linear-gradient(180deg,transparent_68%,#000_100%)]" />
+          <Image
+            src={imagePath("hero-athlete.jpg")}
+            alt="Venom Fitness atleti antrenmanda"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[42%_center] brightness-[0.95] contrast-[1.18] saturate-[1.05] md:object-[68%_center]"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.28)_0%,rgba(0,0,0,0.5)_52%,rgba(0,0,0,0.94)_100%)] md:hidden" />
+          <div className="absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.55)_45%,rgba(0,0,0,0.12)_100%)] md:block" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_26%,rgba(57,255,20,0.18),transparent_36%),linear-gradient(180deg,transparent_58%,#000_100%)]" />
         </motion.div>
 
-        <div className="relative z-10 mx-auto grid min-h-[calc(82vh-6rem)] max-w-7xl items-center gap-10 pb-12">
+        <div className="relative z-10 mx-auto grid min-h-[calc(82vh-6rem)] max-w-7xl items-end gap-10 pb-12 md:items-center">
           <motion.div initial={{ opacity: 0, y: 34 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <div className="mb-6 inline-flex items-center gap-2 border border-neon/30 bg-neon/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-neon backdrop-blur-xl">
-              <ScanLine className="h-4 w-4" />
-              PREMIUM FITNESS • WELLNESS • AI COACH
-            </div>
-            <h1 className="font-display text-3xl font-black leading-[0.95] text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
-              <span className="text-neon">VENOM AI</span>
-              <br />
-              <span className="whitespace-nowrap text-white">Kişisel Fitness Asistanın</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-xl leading-8 text-zinc-200 sm:text-2xl">
-              Üyeliğe dahil yapay zeka destekli kişisel fitness koçu çok yakında aktif.
-            </p>
-            <div className="mt-6 inline-flex items-center gap-3 border border-neon/30 bg-black/46 px-4 py-3 backdrop-blur-2xl">
-              <Bot className="h-5 w-5 text-neon" />
-              <span className="text-sm font-bold uppercase tracking-[0.18em] text-zinc-100">
-                AI Fitness Coach Yakında
+            <h1 className="font-display font-black leading-[0.95] text-white">
+              <span className="block text-neon text-4xl sm:text-5xl md:text-6xl lg:text-7xl">VENOM FITNESS AI</span>
+              <span className="mt-3 block text-white text-lg font-bold sm:text-2xl md:text-3xl">
+                Sporu zekâ ile birleştirdik
               </span>
-            </div>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a href={whatsappHref} className="group inline-flex items-center justify-center gap-2 bg-neon px-7 py-4 text-sm font-black uppercase tracking-[0.14em] text-black transition hover:bg-white">
+            </h1>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <a href={whatsappHref} className="group inline-flex items-center justify-center gap-2 bg-neon px-5 py-3 text-xs font-black uppercase tracking-[0.12em] text-black transition hover:bg-white sm:px-7 sm:py-4 sm:text-sm sm:tracking-[0.14em]">
                 WhatsApp’tan Üyelik Bilgisi Al
-                <ChevronRight className="h-5 w-5 transition group-hover:translate-x-1" />
+                <ChevronRight className="h-4 w-4 transition group-hover:translate-x-1 sm:h-5 sm:w-5" />
               </a>
-              <a href="#ai-koc" className="inline-flex items-center justify-center gap-2 border border-neon/35 bg-white/10 px-7 py-4 text-sm font-black uppercase tracking-[0.14em] text-white backdrop-blur-xl transition hover:border-neon hover:text-neon">
-                <Bot className="h-5 w-5" />
+              <a href="#ai-koc" className="inline-flex items-center justify-center gap-2 border border-neon/35 bg-white/10 px-5 py-3 text-xs font-black uppercase tracking-[0.12em] text-white backdrop-blur-xl transition hover:border-neon hover:text-neon sm:px-7 sm:py-4 sm:text-sm sm:tracking-[0.14em]">
+                <Bot className="h-4 w-4 sm:h-5 sm:w-5" />
                 AI Koçu Keşfet
               </a>
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <section id="reformer" className="px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <motion.div
+            className="relative order-2 overflow-hidden border border-white/10 bg-white/[0.04] lg:order-1"
+            initial={{ opacity: 0, x: -28 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <Image
+              src={imagePath("reformer-feature.jpg")}
+              alt="Venom Fitness Reformer Pilates"
+              width={1066}
+              height={1600}
+              className="h-full max-h-[580px] w-full object-cover"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_88%,rgba(57,255,20,0.2),transparent_40%)]" />
+          </motion.div>
+
+          <motion.div
+            className="order-1 lg:order-2"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            variants={fadeUp}
+          >
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-neon">Reformer Pilates</p>
+            <h2 className="font-display text-3xl font-semibold leading-tight text-white sm:text-4xl md:text-5xl">
+              Yayların Direnci, Zarif Güç
+            </h2>
+            <p className="mt-5 max-w-xl leading-8 text-zinc-300">
+              Reformer Pilates, kontrollü yay direnciyle tüm vücudu çalıştıran düşük etkili bir
+              antrenmandır. Derin karın ve sırt kaslarını güçlendirir, duruşu düzeltir, esnekliği
+              artırır. Yeni başlayandan ileri seviyeye herkese uygundur.
+            </p>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              {reformerBenefits.map((item) => (
+                <div key={item} className="flex items-center gap-3 border border-white/10 bg-black/46 px-4 py-3">
+                  <Check className="h-4 w-4 shrink-0 text-neon" />
+                  <span className="text-sm font-semibold text-zinc-200">{item}</span>
+                </div>
+              ))}
+            </div>
+            <a href={whatsappHref} className="mt-8 inline-flex items-center justify-center gap-2 bg-neon px-6 py-4 text-sm font-black uppercase tracking-[0.14em] text-black transition hover:bg-white">
+              Reformer Seansı İçin Yaz
+              <ArrowRight className="h-5 w-5" />
+            </a>
           </motion.div>
         </div>
       </section>
