@@ -1,5 +1,20 @@
 import type { Metadata } from "next";
+import { Barlow_Condensed, Barlow } from "next/font/google";
 import "./globals.css";
+
+const barlowCondensed = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-barlow-condensed",
+  display: "swap",
+});
+
+const barlow = Barlow({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-barlow",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Venom Fitness Club | Premium Fitness, Wellness ve AI Fitness Coach",
@@ -34,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr">
+    <html lang="tr" className={`${barlowCondensed.variable} ${barlow.variable}`}>
       <body>{children}</body>
     </html>
   );
