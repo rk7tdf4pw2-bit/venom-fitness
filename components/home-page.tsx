@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect } from "react";
 import {
   ArrowRight,
   Bot,
@@ -58,8 +59,6 @@ const whyVenom = [
 
 const stats = [
   { value: "1200", unit: "m²", label: "Premium Alan" },
-  { value: "7/24", unit: "", label: "Açık" },
-  { value: "8+", unit: "", label: "Özellik" },
   { value: "Van'ın", unit: "", label: "En İyi Gym'i" },
 ];
 
@@ -91,6 +90,19 @@ const gallery = [
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0 }
+};
+
+const floatingAnimation = {
+  initial: { y: 0, opacity: 0 },
+  animate: {
+    y: [0, -30, 0],
+    opacity: [0, 0.6, 0],
+    transition: {
+      duration: 6,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  }
 };
 
 function Logo({ compact = false }: { compact?: boolean }) {
@@ -249,7 +261,36 @@ export default function HomePage() {
         )}
       </header>
 
-      <section id="top" className="relative min-h-[82vh] px-4 pt-24 sm:px-6 lg:px-8">
+      <section id="top" className="relative min-h-[82vh] px-4 pt-24 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Animated background orbs */}
+        <motion.div
+          className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-neon/20 to-transparent blur-3xl"
+          animate={{
+            y: [0, 60, 0],
+            x: [0, 40, 0],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-tr from-cyan-500/10 to-transparent blur-3xl"
+          animate={{
+            y: [0, -50, 0],
+            x: [0, -30, 0],
+            opacity: [0.2, 0.4, 0.2],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
+        />
+
         <motion.div className="absolute inset-0 z-0" style={{ y: heroY }}>
           <Image
             src={imagePath("hero-athlete.jpg")}
@@ -273,12 +314,12 @@ export default function HomePage() {
                 Sporu zekâ ile birleştirdik
               </span>
             </h1>
-            <div className="mt-7 flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <a href={whatsappHref} className="group inline-flex items-center justify-center gap-2 bg-neon px-5 py-3 text-xs font-black uppercase tracking-[0.12em] text-black transition hover:bg-white sm:px-7 sm:py-4 sm:text-sm sm:tracking-[0.14em]">
+            <div className="mt-7 flex gap-3">
+              <a href={whatsappHref} className="group flex-1 inline-flex items-center justify-center gap-2 bg-neon px-5 py-3 text-xs font-black uppercase tracking-[0.12em] text-black transition hover:bg-white sm:px-7 sm:py-4 sm:text-sm sm:tracking-[0.14em]">
                 WhatsApp’tan Üyelik Bilgisi Al
                 <ChevronRight className="h-4 w-4 transition group-hover:translate-x-1 sm:h-5 sm:w-5" />
               </a>
-              <a href="#ai-koc" className="group inline-flex items-center justify-center gap-2 bg-red-600 px-5 py-3 text-xs font-black uppercase tracking-[0.12em] text-white transition hover:bg-red-500 sm:px-7 sm:py-4 sm:text-sm sm:tracking-[0.14em] shadow-[0_0_30px_rgba(220,38,38,0.3)] hover:shadow-[0_0_40px_rgba(220,38,38,0.5)]">
+              <a href="#ai-koc" className="group flex-1 inline-flex items-center justify-center gap-2 bg-red-600 px-5 py-3 text-xs font-black uppercase tracking-[0.12em] text-white transition hover:bg-red-500 sm:px-7 sm:py-4 sm:text-sm sm:tracking-[0.14em] shadow-[0_0_30px_rgba(220,38,38,0.3)] hover:shadow-[0_0_40px_rgba(220,38,38,0.5)]">
                 <Bot className="h-4 w-4 sm:h-5 sm:w-5" />
                 AI Koçu Keşfet
               </a>
@@ -287,12 +328,28 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-white/10 bg-white/[0.03] px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 md:grid-cols-4">
+      <section className="border-y border-white/10 bg-white/[0.03] px-4 py-8 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Subtle animated background for stats */}
+        <motion.div
+          className="absolute inset-0 opacity-30"
+          animate={{
+            backgroundPosition: ["0% 0%", "100% 100%"],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          style={{
+            backgroundImage: "linear-gradient(45deg, rgba(57,255,20,0.1) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 md:grid-cols-4 relative z-10">
           {stats.map(({ value, unit, label }, i) => (
             <motion.div
               key={label}
-              className="text-center"
+              className="text-center relative z-10"
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -308,7 +365,7 @@ export default function HomePage() {
       </section>
 
       <section id="reformer" className="px-4 py-12 sm:py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-stretch">
           <motion.div
             className="relative order-2 overflow-hidden border border-neon/20 bg-black lg:order-1"
             initial={{ opacity: 0, x: -28 }}
@@ -321,7 +378,7 @@ export default function HomePage() {
               alt="Venom Fitness Reformer Pilates"
               width={1066}
               height={1600}
-              className="h-full max-h-[580px] w-full object-cover brightness-[0.92] contrast-[1.1]"
+              className="h-full w-full object-cover brightness-[0.92] contrast-[1.1]"
             />
             {/* Gradient overlays for blending */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -333,31 +390,15 @@ export default function HomePage() {
           </motion.div>
 
           <motion.div
-            className="order-1 lg:order-2"
+            className="order-1 lg:order-2 flex flex-col justify-between"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
             variants={fadeUp}
           >
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-neon">Reformer Pilates</p>
-            <h2 className="font-display text-3xl font-semibold leading-tight text-white sm:text-4xl md:text-5xl">
-              Yayların Direnci, Zarif Güç
-            </h2>
-            <p className="mt-5 max-w-xl leading-8 text-zinc-300">
-              Reformer Pilates, kontrollü yay direnciyle tüm vücudu çalıştıran düşük etkili bir
-              antrenmandır. Derin karın ve sırt kaslarını güçlendirir, duruşu düzeltir, esnekliği
-              artırır. Yeni başlayandan ileri seviyeye herkese uygundur.
-            </p>
-            <div className="mt-8 grid gap-3 sm:grid-cols-2">
-              {reformerBenefits.map((item) => (
-                <div key={item} className="flex items-center gap-3 border border-white/10 bg-black/46 px-4 py-3">
-                  <Check className="h-4 w-4 shrink-0 text-neon" />
-                  <span className="text-sm font-semibold text-zinc-200">{item}</span>
-                </div>
-              ))}
-            </div>
-            <a href={whatsappHref} className="mt-8 inline-flex items-center justify-center gap-2 bg-neon px-6 py-4 text-sm font-black uppercase tracking-[0.14em] text-black transition hover:bg-white">
+            <p className="mb-auto text-xs font-bold uppercase tracking-[0.28em] text-neon">Reformer Pilates</p>
+            <a href={whatsappHref} className="mt-auto inline-flex items-center justify-center gap-2 bg-neon px-6 py-4 text-sm font-black uppercase tracking-[0.14em] text-black transition hover:bg-white">
               Reformer Seansı İçin Yaz
               <ArrowRight className="h-5 w-5" />
             </a>
@@ -381,50 +422,66 @@ export default function HomePage() {
                 <p className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-neon">
                   Yakında Tüm Üyelere Özel - Venom AI Koç
                 </p>
-                <h2 className="font-display text-3xl font-semibold leading-tight text-white sm:text-5xl">
-                  Yapay Zeka Fitness Koçu
+                <h2 className="font-display text-4xl font-black leading-tight text-white sm:text-6xl">
+                  <span className="block bg-gradient-to-r from-neon via-cyan-400 to-blue-500 bg-clip-text text-transparent">Yapay Zeka</span>
+                  <span className="block text-white mt-2">Fitness Koçu</span>
                 </h2>
-                <p className="mt-5 max-w-xl leading-8 text-zinc-300">
-                  Üyelerin hedeflerine göre antrenman, beslenme ve motivasyon desteği sunacak
-                  kişisel yapay zeka koç deneyimi Venom üyeliğine dahil olacak.
+                <p className="mt-6 max-w-xl leading-8 text-zinc-300 text-lg">
+                  Makine öğrenmesi teknolojisiyle güçlendirilmiş, her üyeye özel antrenman, beslenme ve motivasyon desteği sağlayan kişisel AI koç deneyimi.
                 </p>
                 <div className="mt-8 grid gap-3 sm:grid-cols-2">
                   {["Antrenman önerileri", "Beslenme tavsiyeleri", "Hedef takibi", "Motivasyon desteği"].map((item) => (
-                    <div key={item} className="flex items-center gap-3 border border-white/10 bg-black/46 px-4 py-3">
-                      <Check className="h-4 w-4 text-neon" />
-                      <span className="text-sm font-semibold text-zinc-200">{item}</span>
+                    <div key={item} className="group relative flex items-center gap-3 border border-cyan-400/40 bg-gradient-to-br from-cyan-400/10 via-transparent to-transparent px-4 py-4 transition hover:border-cyan-400/80 hover:shadow-[0_0_20px_rgba(34,211,238,0.3)]">
+                      <span className="grid h-6 w-6 shrink-0 place-items-center rounded border border-cyan-400/60 bg-cyan-400/10 text-cyan-400">
+                        <Check className="h-3 w-3" />
+                      </span>
+                      <span className="text-sm font-semibold text-white">{item}</span>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="border border-neon/30 bg-zinc-900 p-4 shadow-[0_0_70px_rgba(57,255,20,0.14)]">
-                <div className="mb-4 flex items-center justify-between border-b border-white/15 pb-4">
+              <div className="border border-neon/30 bg-gradient-to-b from-black via-slate-900/20 to-black p-5 shadow-[0_0_60px_rgba(57,255,20,0.1)] rounded-lg overflow-hidden">
+                {/* WhatsApp-style header */}
+                <div className="mb-5 flex items-center justify-between pb-4 border-b border-white/10">
                   <div className="flex items-center gap-3">
-                    <span className="grid h-10 w-10 place-items-center bg-neon text-black">
-                      <Bot className="h-5 w-5" />
+                    <span className="relative grid h-9 w-9 place-items-center bg-gradient-to-br from-neon to-neon/70 rounded-full">
+                      <Bot className="h-5 w-5 text-black" />
                     </span>
                     <div>
-                      <p className="font-display text-lg font-semibold text-white">Venom AI Koç</p>
-                      <p className="text-xs uppercase tracking-[0.18em] text-neon">Yakında aktif</p>
+                      <p className="font-display text-sm font-bold text-white">Venom AI Koç</p>
+                      <p className="text-xs text-zinc-400">Çevrimiçi</p>
                     </div>
                   </div>
-                  <span className="h-2 w-2 rounded-full bg-neon shadow-[0_0_16px_rgba(57,255,20,0.85)]" />
                 </div>
-                <div className="space-y-4">
-                  <div className="ml-auto max-w-[82%] border border-white/25 bg-zinc-800 px-4 py-3 text-sm leading-6 text-white shadow-lg shadow-black/20">
-                    Bugün yağ yakımı ve güç kazanımı için nasıl çalışmalıyım?
+
+                {/* Chat messages like WhatsApp */}
+                <div className="space-y-3">
+                  {/* User message */}
+                  <div className="flex justify-end">
+                    <div className="max-w-[75%] rounded-3xl rounded-tr-none bg-neon/20 border border-neon/40 px-4 py-2 text-xs leading-6 text-white">
+                      Bugün yağ yakımı ve güç kazanımı için nasıl çalışmalıyım?
+                    </div>
                   </div>
-                  <div className="max-w-[88%] border border-neon/45 bg-neon/20 px-4 py-3 text-sm leading-6 text-white shadow-lg shadow-black/20">
-                    Bugün 45 dakikalık kuvvet + kondisyon planı öneriyorum. Önce temel hareketler,
-                    ardından kısa interval bitiriş. Antrenman sonrası protein ve su hedefini de
-                    takip edeceğim.
+
+                  {/* AI response */}
+                  <div className="flex justify-start">
+                    <div className="max-w-[75%] rounded-3xl rounded-tl-none bg-zinc-800/60 border border-white/20 px-4 py-2 text-xs leading-6 text-white">
+                      Bugün 45 dakikalık kuvvet + kondisyon planı öneriyorum. Önce temel hareketler, ardından kısa interval bitiriş.
+                    </div>
                   </div>
-                  <div className="ml-auto max-w-[78%] border border-white/25 bg-zinc-800 px-4 py-3 text-sm leading-6 text-white shadow-lg shadow-black/20">
-                    Hedef takibimi de günceller misin?
+
+                  {/* User message */}
+                  <div className="flex justify-end">
+                    <div className="max-w-[70%] rounded-3xl rounded-tr-none bg-neon/20 border border-neon/40 px-4 py-2 text-xs leading-6 text-white">
+                      Hedef takibimi de günceller misin?
+                    </div>
                   </div>
-                  <div className="max-w-[86%] border border-neon/45 bg-neon/20 px-4 py-3 text-sm leading-6 text-white shadow-lg shadow-black/20">
-                    Haftalık hedefin kaydedildi. Bir sonraki kontrol noktan: 7 gün sonra performans
-                    ve ölçüm değerlendirmesi.
+
+                  {/* AI response */}
+                  <div className="flex justify-start">
+                    <div className="max-w-[75%] rounded-3xl rounded-tl-none bg-zinc-800/60 border border-white/20 px-4 py-2 text-xs leading-6 text-white">
+                      Haftalık hedefin kaydedildi. Bir sonraki kontrol: 7 gün sonra performans değerlendirmesi.
+                    </div>
                   </div>
                 </div>
               </div>
@@ -433,8 +490,36 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="neden-venom" className="px-4 py-12 sm:py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
+      <section id="neden-venom" className="px-4 py-12 sm:py-20 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Animated background orbs */}
+        <motion.div
+          className="absolute top-10 left-10 w-72 h-72 rounded-full bg-gradient-to-br from-neon/15 to-transparent blur-3xl"
+          animate={{
+            y: [0, -40, 0],
+            x: [0, 30, 0],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 9,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-gradient-to-tl from-cyan-500/10 to-transparent blur-3xl"
+          animate={{
+            y: [0, 60, 0],
+            opacity: [0.2, 0.4, 0.2],
+          }}
+          transition={{
+            duration: 11,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1.5,
+          }}
+        />
+
+        <div className="mx-auto max-w-7xl relative z-10">
           <SectionHeader
             eyebrow="Neden Venom?"
             title="Premium Üyelikte Beklediğin Her Şey Tek Çatıda"
@@ -460,16 +545,57 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="ai-koc" className="relative px-4 py-24 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(57,255,20,0.14),transparent_32%,rgba(255,255,255,0.035)_70%,transparent)]" />
+      <section id="ai-koc" className="relative px-4 py-24 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Animated background gradient */}
+        <motion.div
+          className="absolute inset-0 bg-[linear-gradient(115deg,rgba(57,255,20,0.14),transparent_32%,rgba(255,255,255,0.035)_70%,transparent)]"
+          animate={{
+            backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Floating orbs for AI section */}
+        <motion.div
+          className="absolute top-20 right-20 w-64 h-64 rounded-full bg-gradient-to-bl from-neon/15 to-transparent blur-3xl"
+          animate={{
+            y: [0, 40, 0],
+            opacity: [0.4, 0.7, 0.4],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-tr from-blue-500/10 to-transparent blur-3xl"
+          animate={{
+            y: [0, -60, 0],
+            x: [0, -50, 0],
+            opacity: [0.2, 0.5, 0.2],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+        />
         <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }} variants={fadeUp}>
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-neon">Teknoloji × Fitness</p>
-            <h2 className="font-display text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
-              <span className="block text-neon">Neural</span>
-              <span>Fitness Coach</span>
+            <div className="mb-8 inline-block border border-neon/50 bg-gradient-to-r from-neon/10 to-transparent px-4 py-2 rounded">
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-neon">🤖 Teknoloji × Fitness</p>
+            </div>
+            <h2 className="font-display text-5xl font-black leading-[1.1] text-white sm:text-6xl lg:text-7xl">
+              <span className="block">Yapay Zeka</span>
+              <span className="block bg-gradient-to-r from-neon via-cyan-400 to-blue-500 bg-clip-text text-transparent">Fitness Koçu</span>
             </h2>
-            <p className="mt-2 text-xs uppercase tracking-[0.3em] text-zinc-400 font-bold">Yakında Tüm Üyelere</p>
+            <p className="mt-6 text-sm uppercase tracking-[0.2em] text-neon/80 font-bold">Makine Öğrenmesi Destekli • Kişisel AI • 7/24 Erişim</p>
             <p className="mt-4 text-sm uppercase tracking-[0.2em] text-neon/80 font-bold">Kişisel AI Antrenmanı Sistemi</p>
             <p className="mt-6 text-lg leading-8 text-zinc-300">
               Makine öğrenmesi ve biyomekanik analiz teknolojisini birleştirerek, her üyenin hedeflerine özel antrenman, beslenme ve motivasyon desteği sağlayan kişisel yapay zeka koç sistemi.
@@ -544,8 +670,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="galeri" className="px-4 py-12 sm:py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
+      <section id="galeri" className="px-4 py-12 sm:py-20 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Animated background */}
+        <motion.div
+          className="absolute inset-0 opacity-20"
+          animate={{
+            backgroundPosition: ["0% 0%", "100% 100%"],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          style={{
+            backgroundImage: "radial-gradient(circle, rgba(57,255,20,0.1) 1px, transparent 1px)",
+            backgroundSize: "50px 50px",
+          }}
+        />
+
+        <div className="mx-auto max-w-7xl relative z-10">
           <SectionHeader
             eyebrow="Galeri"
             title="Venom Fitness Club’dan Gerçek Kareler"
@@ -568,7 +711,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="px-4 py-20 sm:px-6 lg:px-8">
+      <section className="px-4 py-20 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Background animated orbs */}
+        <motion.div
+          className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-gradient-to-bl from-neon/20 to-transparent blur-3xl"
+          animate={{
+            y: [0, 50, 0],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
         <motion.div
           className="relative mx-auto max-w-7xl overflow-hidden border border-neon/30 bg-black/72 p-6 text-center shadow-[0_0_90px_rgba(57,255,20,0.12)] sm:p-10 lg:p-14"
           initial={{ opacity: 0, y: 28 }}
@@ -576,7 +733,18 @@ export default function HomePage() {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(57,255,20,0.16),transparent_34%)]" />
+          {/* Animated gradient overlay */}
+          <motion.div
+            className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(57,255,20,0.16),transparent_34%)]"
+            animate={{
+              opacity: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
           <div className="relative">
             <p className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-neon">
               Başlangıç için en doğru adım
@@ -697,11 +865,14 @@ export default function HomePage() {
           <a href={whatsappHref} className="inline-flex items-center justify-center bg-neon px-3 py-3 text-xs font-black uppercase tracking-[0.12em] text-black transition hover:bg-white">
             <Phone className="h-4 w-4" />
           </a>
-          <a href={instagramHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center border border-transparent bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 p-0.5 px-3 py-3 transition hover:shadow-[0_0_20px_rgba(236,72,153,0.5)]">
-            <Instagram className="h-4 w-4 text-white" />
+          <a href={instagramHref} target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center justify-center px-3 py-3 transition">
+            <span className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 rounded" />
+            <span className="absolute inset-0.5 bg-gradient-to-br from-pink-500/20 to-transparent rounded group-hover:from-pink-500/40 transition" />
+            <Instagram className="h-4 w-4 relative text-white" />
           </a>
-          <a href="#ai-koc" className="inline-flex items-center justify-center border border-white/15 px-3 py-3 text-xs font-black uppercase tracking-[0.12em] text-white transition hover:border-neon/50 hover:bg-neon/10 hover:text-neon">
-            <Bot className="h-4 w-4" />
+          <a href="#ai-koc" className="group relative inline-flex items-center justify-center px-3 py-3 transition">
+            <span className="absolute inset-0 border border-neon/60 bg-gradient-to-br from-neon/20 to-transparent rounded group-hover:border-neon group-hover:shadow-[0_0_15px_rgba(57,255,20,0.4)] transition" />
+            <Bot className="h-4 w-4 relative text-neon group-hover:text-white transition" />
           </a>
         </div>
       </div>
