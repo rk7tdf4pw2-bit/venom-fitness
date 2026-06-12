@@ -8,3 +8,6 @@ build
 .env.production
 .DS_Store
 .gstack/
+.claude/
+.codegraph/
+tsconfig.tsbuildinfo

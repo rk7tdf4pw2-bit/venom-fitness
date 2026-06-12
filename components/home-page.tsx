@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, type Variants } from "framer-motion";
 import { useEffect } from "react";
 import {
   ArrowRight,
@@ -33,10 +33,24 @@ const imagePath = (file: string) => `/images/${file}`;
 
 const navItems = [
   ["Reformer", "reformer"],
+  ["Antrenörler", "antrenorler"],
   ["Neden Venom", "neden-venom"],
   ["AI Koç", "ai-koc"],
   ["Galeri", "galeri"],
   ["İletişim", "iletisim"]
+];
+
+const trainers: {
+  name: string;
+  role: string;
+  image: string;
+  actionImage?: string;
+}[] = [
+  { name: "Esmanur Yalçın", role: "1. Kademe Fitness Eğitmeni", image: "trainer-1.jpg", actionImage: "trainer-1-action.jpg" },
+  { name: "Burak Şen", role: "1. Kademe Fitness Antrenörü", image: "trainer-4.jpg", actionImage: "trainer-4-action.jpg" },
+  { name: "Arda Kara", role: "Fitness Eğitmeni", image: "trainer-2.jpg", actionImage: "trainer-2-action.jpg" },
+  { name: "İlknur Koç", role: "1. Kademe Fitness Eğitmeni", image: "trainer-3.jpg", actionImage: "trainer-3-action.jpg" },
+  { name: "Çebin Şen", role: "2. Kademe Reformer Antrenörü", image: "trainer-5.jpg" },
 ];
 
 const reformerBenefits = [
@@ -90,6 +104,15 @@ const gallery = [
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0 }
+};
+
+const heroItem: Variants = {
+  hidden: { opacity: 0, y: 36 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] }
+  }
 };
 
 const floatingAnimation = {
@@ -176,6 +199,49 @@ function GalleryImage({
       <figcaption className="absolute bottom-5 left-5 right-5">
         <p className="font-display text-2xl font-semibold text-white">{label}</p>
         <p className="mt-2 text-xs font-bold uppercase tracking-[0.2em] text-neon">Venom Fitness Club</p>
+      </figcaption>
+    </figure>
+  );
+}
+
+function TrainerCard({
+  name,
+  role,
+  image,
+  actionImage
+}: {
+  name: string;
+  role: string;
+  image: string;
+  actionImage?: string;
+}) {
+  const [showAction, setShowAction] = useState(false);
+
+  return (
+    <figure
+      className={`group relative aspect-[3/4] overflow-hidden border border-white/10 bg-white/[0.035] transition hover:border-neon/40 ${actionImage ? "cursor-pointer" : ""}`}
+      onClick={actionImage ? () => setShowAction((v) => !v) : undefined}
+    >
+      <Image
+        src={imagePath(image)}
+        alt={`${name} - Venom Fitness antrenörü`}
+        fill
+        sizes="(max-width: 640px) 75vw, (max-width: 1024px) 33vw, 20vw"
+        className={`object-cover transition-opacity duration-700 ${actionImage ? (showAction ? "opacity-0" : "opacity-100 group-hover:opacity-0") : "opacity-100"}`}
+      />
+      {actionImage ? (
+        <Image
+          src={imagePath(actionImage)}
+          alt={`${name} ders verirken`}
+          fill
+          sizes="(max-width: 640px) 75vw, (max-width: 1024px) 33vw, 20vw"
+          className={`object-cover transition-opacity duration-700 ${showAction ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+        />
+      ) : null}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-transparent" />
+      <figcaption className="absolute bottom-4 left-4 right-4">
+        <p className="font-display text-xl font-bold text-white">{name}</p>
+        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-neon">{role}</p>
       </figcaption>
     </figure>
   );
@@ -298,32 +364,41 @@ export default function HomePage() {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[42%_center] brightness-[0.95] contrast-[1.18] saturate-[1.05] md:object-[68%_center]"
+            className="animate-ken-burns object-cover object-[42%_center] brightness-[0.95] contrast-[1.18] saturate-[1.05] md:object-[68%_center]"
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.28)_0%,rgba(0,0,0,0.5)_52%,rgba(0,0,0,0.94)_100%)] md:hidden" />
           <div className="absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.55)_45%,rgba(0,0,0,0.12)_100%)] md:block" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_26%,rgba(57,255,20,0.18),transparent_36%),linear-gradient(180deg,transparent_58%,#000_100%)]" />
         </motion.div>
 
-        <div className="relative z-10 mx-auto grid min-h-[calc(82vh-6rem)] max-w-7xl items-end gap-10 pb-12 md:items-center">
-          <motion.div initial={{ opacity: 0, y: 34 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <h1 className="font-display font-black leading-[0.9] text-white">
+        <div className="relative z-10 mx-auto grid min-h-[calc(82vh-6rem)] max-w-7xl items-end gap-10 pb-14 md:items-center">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: { transition: { staggerChildren: 0.16, delayChildren: 0.2 } }
+            }}
+          >
+            <motion.h1 variants={heroItem} className="font-display font-black leading-[0.9] text-white">
               <span className="block text-5xl text-white sm:text-6xl md:text-7xl lg:text-8xl">VENOM</span>
               <span className="block text-5xl text-neon sm:text-6xl md:text-7xl lg:text-8xl">FITNESS</span>
-              <span className="mt-4 block text-base font-bold uppercase tracking-[0.3em] text-zinc-300 sm:text-lg md:text-xl">
-                Sporu zekâ ile birleştirdik
-              </span>
-            </h1>
-            <div className="mt-7 flex gap-3">
-              <a href={whatsappHref} className="group flex-1 inline-flex items-center justify-center gap-2 bg-neon px-5 py-3 text-xs font-black uppercase tracking-[0.12em] text-black transition hover:bg-white sm:px-7 sm:py-4 sm:text-sm sm:tracking-[0.14em]">
+            </motion.h1>
+            <motion.p
+              variants={heroItem}
+              className="mt-6 text-base font-bold uppercase tracking-[0.3em] text-zinc-300 sm:text-lg md:mt-7 md:text-xl"
+            >
+              Sporu zekâ ile birleştirdik
+            </motion.p>
+            <motion.div variants={heroItem} className="mt-10 flex flex-col gap-4 sm:flex-row md:mt-12">
+              <a href={whatsappHref} className="group inline-flex items-center justify-center gap-2 bg-neon px-7 py-4 text-xs font-black uppercase tracking-[0.12em] text-black transition hover:bg-white sm:flex-1 sm:px-8 sm:py-5 sm:text-sm sm:tracking-[0.14em]">
                 WhatsApp’tan Üyelik Bilgisi Al
                 <ChevronRight className="h-4 w-4 transition group-hover:translate-x-1 sm:h-5 sm:w-5" />
               </a>
-              <a href="#ai-koc" className="group flex-1 inline-flex items-center justify-center gap-2 bg-red-600 px-5 py-3 text-xs font-black uppercase tracking-[0.12em] text-white transition hover:bg-red-500 sm:px-7 sm:py-4 sm:text-sm sm:tracking-[0.14em] shadow-[0_0_30px_rgba(220,38,38,0.3)] hover:shadow-[0_0_40px_rgba(220,38,38,0.5)]">
+              <a href="#ai-koc" className="group inline-flex items-center justify-center gap-2 border border-neon/60 bg-transparent px-7 py-4 text-xs font-black uppercase tracking-[0.12em] text-neon transition hover:border-neon hover:bg-neon/10 hover:shadow-[0_0_24px_rgba(57,255,20,0.18)] sm:flex-1 sm:px-8 sm:py-5 sm:text-sm sm:tracking-[0.14em]">
                 <Bot className="h-4 w-4 sm:h-5 sm:w-5" />
                 AI Koçu Keşfet
               </a>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -403,6 +478,30 @@ export default function HomePage() {
               <ArrowRight className="h-5 w-5" />
             </a>
           </motion.div>
+        </div>
+      </section>
+
+      <section id="antrenorler" className="px-4 py-12 sm:py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader
+            eyebrow="Ekibimiz"
+            title="Antrenörlerini Tanı"
+            text="Alanında deneyimli Venom antrenörleri, hedefine giden yolda her antrenmanında yanında. Fotoğrafa dokun, antrenmandaki haliyle tanış."
+          />
+          <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-5">
+            {trainers.map((trainer, index) => (
+              <motion.div
+                key={trainer.name}
+                className="w-[72%] shrink-0 snap-center sm:w-auto"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.55, delay: index * 0.07 }}
+              >
+                <TrainerCard {...trainer} />
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -860,20 +959,33 @@ export default function HomePage() {
         <Phone className="h-6 w-6" />
       </a>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-black/86 p-3 backdrop-blur-2xl lg:hidden">
-        <div className="mx-auto grid max-w-md grid-cols-3 gap-3">
-          <a href={whatsappHref} className="inline-flex items-center justify-center bg-neon px-3 py-3 text-xs font-black uppercase tracking-[0.12em] text-black transition hover:bg-white">
-            <Phone className="h-4 w-4" />
-          </a>
-          <a href={instagramHref} target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center justify-center px-3 py-3 transition">
-            <span className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 rounded" />
-            <span className="absolute inset-0.5 bg-gradient-to-br from-pink-500/20 to-transparent rounded group-hover:from-pink-500/40 transition" />
-            <Instagram className="h-4 w-4 relative text-white" />
-          </a>
-          <a href="#ai-koc" className="group relative inline-flex items-center justify-center px-3 py-3 transition">
-            <span className="absolute inset-0 border border-neon/60 bg-gradient-to-br from-neon/20 to-transparent rounded group-hover:border-neon group-hover:shadow-[0_0_15px_rgba(57,255,20,0.4)] transition" />
-            <Bot className="h-4 w-4 relative text-neon group-hover:text-white transition" />
-          </a>
+      <div className="fixed inset-x-0 bottom-0 z-40 px-4 pb-4 lg:hidden">
+        <div className="mx-auto max-w-md rounded-2xl border border-white/12 bg-black/40 p-2 shadow-[0_8px_32px_rgba(0,0,0,0.5)] backdrop-blur-2xl">
+          <div className="grid grid-cols-3 gap-1">
+            <a
+              href={whatsappHref}
+              aria-label="WhatsApp ile iletişim"
+              className="inline-flex items-center justify-center rounded-xl px-4 py-4 text-neon transition hover:bg-white/[0.07] active:bg-white/10"
+            >
+              <Phone className="h-5 w-5" strokeWidth={1.5} />
+            </a>
+            <a
+              href={instagramHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="inline-flex items-center justify-center rounded-xl px-4 py-4 text-white/85 transition hover:bg-white/[0.07] hover:text-white active:bg-white/10"
+            >
+              <Instagram className="h-5 w-5" strokeWidth={1.5} />
+            </a>
+            <a
+              href="#ai-koc"
+              aria-label="AI Koç bölümüne git"
+              className="inline-flex items-center justify-center rounded-xl px-4 py-4 text-white/85 transition hover:bg-white/[0.07] hover:text-neon active:bg-white/10"
+            >
+              <Bot className="h-5 w-5" strokeWidth={1.5} />
+            </a>
+          </div>
         </div>
       </div>
     </main>
