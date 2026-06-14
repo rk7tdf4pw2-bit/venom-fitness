@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>VENOM GÜÇ TESTİ — Venom Fitness Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060906;
+    --panel:#0A0F0A;
+    --venom:#7DF63B;
+    --venom-dim:#3E7A1E;
+    --venom-glow:rgba(125,246,59,.45);
+    --grid:rgba(125,246,59,.07);
+    --text:#F2F5F0;
+    --muted:#8C968A;
+    --danger:#FF5050;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Space Grotesk',sans-serif;
+    overflow:hidden;
+    touch-action:manipulation;
+    user-select:none;-webkit-user-select:none;
+    display:flex;align-items:center;justify-content:center;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:44px 44px;
+    mask-image:radial-gradient(ellipse at 50% 40%, #000 30%, transparent 80%);
+    -webkit-mask-image:radial-gradient(ellipse at 50% 40%, #000 30%, transparent 80%);
+  }
+  .stage{
+    width:100%;max-width:430px;height:100dvh;max-height:920px;
+    display:flex;flex-direction:column;
+    padding:20px 20px 28px;position:relative;
+  }
+  header{
+    display:flex;align-items:center;gap:12px;
+    border:1px solid var(--venom-dim);
+    padding:12px 14px;flex-shrink:0;
+  }
+  .flame{
+    width:38px;height:38px;border:1px solid var(--venom);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .flame svg{width:20px;height:20px;stroke:var(--venom);fill:none;stroke-width:1.8}
+  .brand b{
+    font-family:'Archivo',sans-serif;font-weight:900;font-size:15px;
+    letter-spacing:.32em;display:block;
+  }
+  .brand span{
+    color:var(--venom);font-size:10px;letter-spacing:.38em;font-weight:500;
+  }
+  .ver{
+    margin-left:auto;color:var(--muted);font-size:10px;letter-spacing:.2em;
+    text-align:right;line-height:1.5;
+  }
+  .ver em{color:var(--venom);font-style:normal}
+  .screen{flex:1;display:none;flex-direction:column;min-height:0}
+  .screen.on{display:flex}
+  .robot{
+    width:64px;height:64px;margin:0 auto;
+    stroke:var(--venom);fill:none;stroke-width:1.6;
+    filter:drop-shadow(0 0 14px var(--venom-glow));
+    animation:hover 3s ease-in-out infinite;
+  }
+  @keyframes hover{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  h1{
+    font-family:'Archivo',sans-serif;font-weight:900;text-align:center;
+    font-size:clamp(34px,9vw,44px);line-height:1.02;margin-top:18px;
+    letter-spacing:.02em;
+  }
+  h1 .gz{color:var(--venom);text-shadow:0 0 24px var(--venom-glow)}
+  .sub{
+    text-align:center;color:var(--muted);font-size:14px;line-height:1.6;
+    margin-top:12px;padding:0 8px;
+  }
+  .sub b{color:var(--text)}
+  .tiers{
+    margin-top:auto;border:1px solid var(--venom-dim);
+    display:flex;flex-direction:column;
+  }
+  .tier{
+    display:flex;align-items:center;gap:12px;padding:12px 16px;
+    border-bottom:1px solid rgba(125,246,59,.15);font-size:13px;
+  }
+  .tier:last-child{border-bottom:none}
+  .tier .hits{
+    font-family:'Archivo',sans-serif;font-weight:700;width:64px;color:var(--venom);
+    font-variant-numeric:tabular-nums;
+  }
+  .tier .rank{letter-spacing:.18em;font-weight:500;text-transform:uppercase}
+  .tier .off{
+    margin-left:auto;font-family:'Archivo',sans-serif;font-weight:900;font-size:16px;
+  }
+  .tier.top .off{color:var(--venom);text-shadow:0 0 16px var(--venom-glow)}
+  .cta{
+    margin-top:16px;flex-shrink:0;
+    font-family:'Archivo',sans-serif;font-weight:900;font-size:17px;letter-spacing:.14em;
+    background:linear-gradient(100deg,#9CFF57,#6CE32B);color:#06140A;
+    border:none;padding:20px;width:100%;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    text-transform:uppercase;
+  }
+  .cta:active{transform:scale(.98)}
+  .cta.ghost{
+    background:transparent;color:var(--text);border:1px solid var(--venom-dim);
+    font-size:13px;padding:15px;
+  }
+  .hud{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    margin-top:18px;flex-shrink:0;
+  }
+  .hud .lbl{color:var(--muted);font-size:10px;letter-spacing:.3em;display:block;margin-bottom:2px}
+  .hud .num{
+    font-family:'Archivo',sans-serif;font-weight:900;font-size:42px;line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  #timer.low{color:var(--danger)}
+  #hits{color:var(--venom);text-shadow:0 0 18px var(--venom-glow);text-align:right}
+  .bar{
+    margin-top:14px;height:14px;border:1px solid var(--venom-dim);
+    position:relative;flex-shrink:0;overflow:hidden;
+  }
+  .bar i{
+    position:absolute;inset:0;width:0%;
+    background:linear-gradient(90deg,#3E7A1E,#7DF63B);
+    box-shadow:0 0 18px var(--venom-glow);
+    transition:width .12s linear;
+  }
+  .marks{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);
+    letter-spacing:.15em;margin-top:6px;flex-shrink:0}
+  .marks b{color:var(--venom)}
+  .padwrap{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:10px 0}
+  .padbox{position:relative;width:min(72vw,300px)}
+  .badge{
+    position:absolute;z-index:3;display:flex;align-items:center;gap:7px;
+    background:var(--panel);border:1px solid var(--venom-dim);
+    padding:7px 11px;color:var(--muted);
+    transition:.3s;
+  }
+  .badge svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;flex-shrink:0}
+  .badge b{font-family:'Archivo';font-weight:900;font-size:13px;display:block;line-height:1}
+  .badge span{font-size:8.5px;letter-spacing:.18em;display:block;margin-top:2px}
+  .b60{top:-10px;left:-14px}
+  .b100{top:-10px;right:-14px}
+  .badge.lit{
+    color:var(--venom);border-color:var(--venom);
+    background:rgba(125,246,59,.1);
+    box-shadow:0 0 22px var(--venom-glow);
+    animation:pop .35s;
+  }
+  @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
+  #pad{
+    width:100%;aspect-ratio:1;border-radius:50%;cursor:pointer;
+    border:2px solid var(--venom);
+    background:radial-gradient(circle at 50% 38%, rgba(125,246,59,.22), rgba(125,246,59,.04) 65%);
+    box-shadow:0 0 40px var(--venom-glow), inset 0 0 30px rgba(125,246,59,.12);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    font-family:'Archivo',sans-serif;font-weight:900;color:var(--venom);
+    font-size:24px;letter-spacing:.18em;
+    transition:transform .05s;
+  }
+  #pad.hit{transform:scale(.94);box-shadow:0 0 70px var(--venom-glow), inset 0 0 50px rgba(125,246,59,.3)}
+  #pad small{font-family:'Space Grotesk';font-weight:400;color:var(--muted);
+    font-size:11px;letter-spacing:.25em}
+  .count{
+    position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    background:rgba(6,9,6,.88);z-index:5;
+    font-family:'Archivo';font-weight:900;font-size:120px;color:var(--venom);
+    text-shadow:0 0 50px var(--venom-glow);
+  }
+  .count.on{display:flex}
+  .res-rank{
+    text-align:center;margin-top:26px;
+    font-family:'Archivo';font-weight:900;font-size:clamp(36px,10vw,48px);
+    letter-spacing:.06em;color:var(--venom);text-shadow:0 0 30px var(--venom-glow);
+  }
+  .res-rank.fail{color:var(--danger);text-shadow:0 0 30px rgba(255,80,80,.4)}
+  .res-stats{text-align:center;color:var(--muted);font-size:13px;margin-top:8px;letter-spacing:.08em}
+  .res-stats b{color:var(--text);font-size:15px}
+  .codebox{
+    margin-top:22px;border:1px dashed var(--venom);padding:18px;
+    text-align:center;background:rgba(125,246,59,.05);
+  }
+  .codebox .lbl{color:var(--muted);font-size:10px;letter-spacing:.34em}
+  .codebox .code{
+    font-family:'Archivo';font-weight:900;font-size:30px;letter-spacing:.12em;
+    color:var(--venom);margin-top:6px;text-shadow:0 0 20px var(--venom-glow);
+  }
+  .codebox .pct{
+    font-family:'Archivo';font-weight:900;font-size:15px;margin-top:4px;
+  }
+  .howto{
+    color:var(--muted);font-size:12px;line-height:1.7;text-align:center;
+    margin-top:14px;padding:0 6px;
+  }
+  .howto b{color:var(--text)}
+  .btnrow{margin-top:auto;display:flex;flex-direction:column;gap:10px;flex-shrink:0}
+  .btnrow a{text-decoration:none}
+  .btnrow a button{width:100%;background:linear-gradient(100deg,#25D366,#1a9d4a)}
+  .toast{
+    position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);
+    background:var(--venom);color:#06140A;font-weight:700;font-size:13px;
+    padding:10px 18px;opacity:0;pointer-events:none;transition:.25s;z-index:10;
+    letter-spacing:.05em;
+  }
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  .monster{
+    position:fixed;inset:0;z-index:20;pointer-events:none;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+    opacity:0;transition:opacity .4s;
+    background:radial-gradient(ellipse at 50% 100%, rgba(125,246,59,.16), transparent 65%);
+  }
+  .monster.on{opacity:1}
+  .monster .vtxt{
+    font-family:'Archivo';font-weight:900;font-size:clamp(46px,14vw,72px);
+    letter-spacing:.08em;color:var(--venom);
+    text-shadow:0 0 40px var(--venom-glow),0 0 90px var(--venom-glow);
+    transform:scale(0);margin-bottom:-22px;z-index:2;
+  }
+  .monster.on .vtxt{animation:vtxt .5s .25s cubic-bezier(.2,1.6,.4,1) forwards}
+  @keyframes vtxt{to{transform:scale(1)}}
+  .monster::after{
+    content:"";position:absolute;inset:0;background:var(--venom);opacity:0;
+  }
+  .monster.on::after{animation:flash .45s ease-out}
+  @keyframes flash{0%{opacity:.55}100%{opacity:0}}
+  .monster svg{
+    width:min(108vw,540px);
+    transform:translateY(105%);
+    filter:drop-shadow(0 0 36px var(--venom-glow));
+  }
+  .monster.on svg{animation:rise .5s cubic-bezier(.2,1.25,.4,1) forwards}
+  @keyframes rise{to{transform:translateY(2%)}}
+  .stage.shake{animation:shake .85s}
+  @keyframes shake{
+    0%,100%{transform:translate(0,0) rotate(0)}
+    8%{transform:translate(-13px,8px) rotate(-.8deg)}
+    16%{transform:translate(12px,-10px) rotate(.7deg)}
+    24%{transform:translate(-11px,-8px) rotate(-.6deg)}
+    32%{transform:translate(11px,9px) rotate(.6deg)}
+    42%{transform:translate(-9px,6px) rotate(-.5deg)}
+    52%{transform:translate(8px,-7px) rotate(.4deg)}
+    64%{transform:translate(-6px,-5px) rotate(-.3deg)}
+    76%{transform:translate(5px,4px) rotate(.2deg)}
+    88%{transform:translate(-3px,2px) rotate(0)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .stage.shake{animation:none}
+    .monster svg{transform:translateY(8%)}
+    .monster .vtxt{transform:scale(1)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .robot{animation:none}
+    *{transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <header>
+    <div class="flame">
+      <svg viewBox="0 0 24 24"><path d="M12 3c1.5 3-2.5 4.5-2.5 8a4.5 4.5 0 0 0 9 0c0-1.8-.8-3.2-1.5-4.2-.4 1-1 1.7-2 2.2.5-2.5-1-5-3-6z"/></svg>
+    </div>
+    <div class="brand"><b>VENOM</b><span>FİTNESS CLUB</span></div>
+    <div class="ver">NEURAL GAME<br>ENGINE <em>V1.0</em></div>
+  </header>
+
+  <section class="screen on" id="scr-intro">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0">
+      <svg class="robot" viewBox="0 0 24 24">
+        <rect x="5" y="8" width="14" height="10" rx="2"/>
+        <line x1="12" y1="8" x2="12" y2="5"/><circle cx="12" cy="4" r="1"/>
+        <circle cx="9.5" cy="12.5" r=".6" fill="#7DF63B"/>
+        <circle cx="14.5" cy="12.5" r=".6" fill="#7DF63B"/>
+        <line x1="9" y1="15.5" x2="15" y2="15.5"/>
+      </svg>
+      <h1>VENOM<br><span class="gz">GÜÇ TESTİ</span></h1>
+      <p class="sub"><b>10 saniyen</b> var. Butona olabildiğince hızlı vur,
+      gücünü kanıtla, indirim kodunu kap. Yapay zekâ seni izliyor. 🤖</p>
+    </div>
+    <div class="tiers">
+      <div class="tier"><span class="hits">60+</span><span class="rank">⚡ Sporcu</span><span class="off">%5</span></div>
+      <div class="tier top"><span class="hits">110+</span><span class="rank">🐍 Venom</span><span class="off">%10</span></div>
+    </div>
+    <button class="cta" id="btn-start">TESTİ BAŞLAT →</button>
+  </section>
+
+  <section class="screen" id="scr-game">
+    <div class="hud">
+      <div><span class="lbl">SÜRE</span><div class="num" id="timer">10.0</div></div>
+      <div><span class="lbl" style="text-align:right">VURUŞ</span><div class="num" id="hits">0</div></div>
+    </div>
+    <div class="bar"><i id="fill"></i></div>
+    <div class="marks"><span>0</span><span>60 → %5</span><b>110 → %10</b></div>
+    <div class="padwrap">
+      <div class="padbox">
+        <div class="badge b60" id="badge60">
+          <svg viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+          <div><b>60+</b><span>SPORCU %5</span></div>
+        </div>
+        <div class="badge b100" id="badge100">
+          <svg viewBox="0 0 24 24"><path d="M12 3c4 0 7 2.5 7 6 0 2.5-1.5 4-3.5 4.5L17 21l-3-3.5-2 3-2-3L7 21l1.5-7.5C6.5 13 5 11.5 5 9c0-3.5 3-6 7-6z"/><circle cx="9.5" cy="8.5" r=".7" fill="currentColor"/><circle cx="14.5" cy="8.5" r=".7" fill="currentColor"/></svg>
+          <div><b>110+</b><span>VENOM %10</span></div>
+        </div>
+        <button id="pad">VUR!<small>HIZLI HIZLI</small></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="scr-result">
+    <div class="res-rank" id="res-rank">VENOM</div>
+    <p class="res-stats" id="res-stats"></p>
+    <div class="codebox" id="codebox">
+      <div class="lbl">İNDİRİM KODUN</div>
+      <div class="code" id="res-code">VNM20-XXXX</div>
+      <div class="pct" id="res-pct">ÜYELİKTE %20 İNDİRİM</div>
+    </div>
+    <p class="howto" id="res-howto">📸 Ekran görüntüsü al, resepsiyonda göster. Kod 7 gün geçerli.</p>
+    <div class="btnrow">
+      <button class="cta" id="btn-copy">KODU KOPYALA</button>
+      <a id="btn-whatsapp" href="#" target="_blank">
+        <button class="cta">💚 WHATSAPP'TA GÖNDER</button>
+      </a>
+      <button class="cta ghost" id="btn-retry">↻ TEKRAR DENE</button>
+    </div>
+  </section>
+
+  <div class="count" id="count">3</div>
+  <div class="toast" id="toast">Kod kopyalandı ✓</div>
+
+  <div class="monster" id="monster">
+    <div class="vtxt">VENOM!</div>
+    <svg viewBox="0 0 400 280" aria-hidden="true">
+      <defs>
+        <linearGradient id="vbody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#121C0F"/>
+          <stop offset="1" stop-color="#050805"/>
+        </linearGradient>
+      </defs>
+      <g stroke="#7DF63B" stroke-width="3.4" fill="url(#vbody)" stroke-linejoin="round">
+        <path d="M138 116 L 146 76 L 160 106 Z M162 104 L 172 70 L 184 100 Z M216 100 L 228 70 L 238 104 Z M240 106 L 254 76 L 262 116 Z"/>
+        <path d="M200 96 C 166 96 144 106 130 122 C 116 138 110 156 114 176 C 102 196 96 234 94 280 L 306 280 C 304 234 298 196 286 176 C 290 156 284 138 270 122 C 256 106 234 96 200 96 Z"/>
+        <path d="M200 6 C 166 6 142 30 140 60 C 139 78 145 92 156 102 L 158 118 C 170 132 230 132 242 118 L 244 102 C 255 92 261 78 260 60 C 258 30 234 6 200 6 Z"/>
+      </g>
+      <g fill="#E8FFE0">
+        <path d="M188 46 C 176 36 158 38 152 48 C 156 62 172 70 188 64 C 193 58 193 51 188 46 Z"/>
+        <path d="M212 46 C 224 36 242 38 248 48 C 244 62 228 70 212 64 C 207 58 207 51 212 46 Z"/>
+      </g>
+      <g>
+        <path d="M160 84 C 180 74 220 74 240 84 C 238 110 222 126 200 126 C 178 126 162 110 160 84 Z" fill="#1A0508" stroke="#7DF63B" stroke-width="2.2"/>
+        <g fill="#F2F5F0">
+          <path d="M164 84 L 170 102 L 176 83 Z"/>
+          <path d="M178 81 L 184 100 L 190 80 Z"/>
+          <path d="M193 79 L 199 99 L 205 79 Z"/>
+          <path d="M208 80 L 214 100 L 220 81 Z"/>
+          <path d="M222 83 L 228 102 L 234 84 Z"/>
+        </g>
+        <path d="M200 112 C 210 130 226 138 238 154 C 250 170 252 192 240 202 C 244 184 234 170 220 158 C 206 146 196 130 195 116 Z" fill="#7DF63B" opacity=".92"/>
+      </g>
+    </svg>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const scr={intro:$('scr-intro'),game:$('scr-game'),result:$('scr-result')};
+  const DURATION=10.0, TARGET=110;
+  const TIERS=[
+    {min:110,rank:'VENOM',pct:10,prefix:'VNM10',emoji:'🐍'},
+    {min:60, rank:'SPORCU',pct:5, prefix:'VNM5', emoji:'⚡'},
+  ];
+  let hits=0,running=false,endAt=0,raf=null;
+  let lastCode='', lastPercent=0;
+
+  function show(name){
+    Object.values(scr).forEach(s=>s.classList.remove('on'));
+    scr[name].classList.add('on');
+  }
+
+  function genCode(prefix){
+    const c='ABCDEFGHJKLMNPRSTUVYZ23456789';let s='';
+    for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];
+    return prefix+'-'+s;
+  }
+
+  function countdown(cb){
+    const el=$('count');let n=3;
+    el.textContent=n;el.classList.add('on');
+    const iv=setInterval(()=>{
+      n--;
+      if(n===0){el.textContent='BAS!';}
+      else if(n<0){clearInterval(iv);el.classList.remove('on');cb();}
+      else{el.textContent=n;}
+    },700);
+  }
+
+  function startGame(){
+    hits=0;
+    $('hits').textContent='0';
+    $('fill').style.width='0%';
+    $('badge60').classList.remove('lit');
+    $('badge100').classList.remove('lit');
+    $('monster').classList.remove('on');
+    $('timer').textContent=DURATION.toFixed(1);
+    $('timer').classList.remove('low');
+    show('game');
+    countdown(()=>{
+      running=true;
+      endAt=performance.now()+DURATION*1000;
+      raf=requestAnimationFrame(tick);
+    });
+  }
+
+  function tick(now){
+    const left=Math.max(0,(endAt-now)/1000);
+    $('timer').textContent=left.toFixed(1);
+    if(left<=3)$('timer').classList.add('low');
+    if(left<=0){running=false;finish();return;}
+    raf=requestAnimationFrame(tick);
+  }
+
+  function hit(e){
+    if(!running)return;
+    e.preventDefault();
+    hits++;
+    $('hits').textContent=hits;
+    $('fill').style.width=Math.min(100,hits/TARGET*100)+'%';
+    if(hits===60){$('badge60').classList.add('lit');if(navigator.vibrate)navigator.vibrate([30,40,30]);}
+    if(hits===110){
+      $('badge100').classList.add('lit');
+      unleashMonster();
+      if(navigator.vibrate)navigator.vibrate([90,40,90,40,90,40,90,40,220]);
+    }
+    const pad=$('pad');
+    pad.classList.add('hit');
+    setTimeout(()=>pad.classList.remove('hit'),50);
+    if(navigator.vibrate)navigator.vibrate(8);
+  }
+
+  function unleashMonster(hold){
+    const m=$('monster'), st=document.querySelector('.stage');
+    m.classList.add('on');
+    st.classList.add('shake');
+    setTimeout(()=>st.classList.remove('shake'),900);
+    if(!hold)setTimeout(()=>m.classList.remove('on'),2200);
+  }
+
+  function finish(){
+    cancelAnimationFrame(raf);
+    const tier=TIERS.find(t=>hits>=t.min);
+    const cps=(hits/DURATION).toFixed(1);
+    $('res-stats').innerHTML='<b>'+hits+'</b> vuruş &nbsp;·&nbsp; saniyede <b>'+cps+'</b>';
+    const rankEl=$('res-rank');
+    if(tier){
+      rankEl.textContent=tier.emoji+' '+tier.rank;
+      rankEl.classList.remove('fail');
+      $('codebox').style.display='block';
+      $('btn-copy').style.display='flex';
+      $('btn-whatsapp').style.display='flex';
+      lastCode=genCode(tier.prefix);
+      lastPercent=tier.pct;
+      $('res-code').textContent=lastCode;
+      $('res-pct').textContent='ÜYELİKTE %'+tier.pct+' İNDİRİM';
+
+      const msg=`Venom Güç Testi'nde ${hits} vuruş yaptım! 🔥\n\nİndirim Kodu: ${lastCode}\nİndirim Oranı: %${tier.pct}\n\nRandevu almak istiyorum.`;
+      const waLink=`https://wa.me/905326597384?text=${encodeURIComponent(msg)}`;
+      $('btn-whatsapp').href=waLink;
+
+      $('res-howto').innerHTML='📸 <b>Ekran görüntüsü al</b>, Instagram\'dan <b>@venomfitness</b> hesabına DM ile gönder veya resepsiyonda göster. Kod 7 gün geçerli, kişiye özeldir.';
+    }else{
+      rankEl.textContent='ÇAYLAK';
+      rankEl.classList.add('fail');
+      $('codebox').style.display='none';
+      $('btn-copy').style.display='none';
+      $('btn-whatsapp').style.display='none';
+      $('res-howto').innerHTML='60 vuruşa ulaşamadın. Yapay zekâ not aldı: <b>"Potansiyel var ama antrenman şart."</b> Bir daha dene 💪';
+    }
+    show('result');
+  }
+
+  $('btn-start').addEventListener('click',startGame);
+  $('btn-retry').addEventListener('click',startGame);
+  $('pad').addEventListener('pointerdown',hit);
+  $('btn-copy').addEventListener('click',()=>{
+    const code=$('res-code').textContent;
+    if(navigator.clipboard)navigator.clipboard.writeText(code);
+    const t=$('toast');t.classList.add('on');
+    setTimeout(()=>t.classList.remove('on'),1800);
+  });
+})();
+</script>
+</body>
+</html>
