@@ -22,6 +22,7 @@ import {
   Coffee,
   Sparkles,
   Brain,
+  Zap,
 } from "lucide-react";
 
 const whatsappHref =
@@ -389,14 +390,18 @@ export default function HomePage() {
             >
               Sporu zekâ ile birleştirdik
             </motion.p>
-            <motion.div variants={heroItem} className="mt-10 flex flex-col gap-4 sm:flex-row md:mt-12">
-              <a href={whatsappHref} className="group inline-flex items-center justify-center gap-2 bg-neon px-7 py-4 text-xs font-black uppercase tracking-[0.12em] text-black transition hover:bg-white sm:flex-1 sm:px-8 sm:py-5 sm:text-sm sm:tracking-[0.14em]">
+            <motion.div variants={heroItem} className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 md:mt-12">
+              <a href={whatsappHref} className="group inline-flex items-center justify-center gap-2 bg-neon px-7 py-4 text-xs font-black uppercase tracking-[0.12em] text-black transition hover:bg-white sm:px-8 sm:py-5 sm:text-sm sm:tracking-[0.14em]">
                 WhatsApp’tan Üyelik Bilgisi Al
                 <ChevronRight className="h-4 w-4 transition group-hover:translate-x-1 sm:h-5 sm:w-5" />
               </a>
-              <a href="#ai-koc" className="group inline-flex items-center justify-center gap-2 border border-neon/60 bg-transparent px-7 py-4 text-xs font-black uppercase tracking-[0.12em] text-neon transition hover:border-neon hover:bg-neon/10 hover:shadow-[0_0_24px_rgba(57,255,20,0.18)] sm:flex-1 sm:px-8 sm:py-5 sm:text-sm sm:tracking-[0.14em]">
+              <a href="#ai-koc" className="group inline-flex items-center justify-center gap-2 border border-neon/60 bg-transparent px-7 py-4 text-xs font-black uppercase tracking-[0.12em] text-neon transition hover:border-neon hover:bg-neon/10 hover:shadow-[0_0_24px_rgba(57,255,20,0.18)] sm:px-8 sm:py-5 sm:text-sm sm:tracking-[0.14em]">
                 <Bot className="h-4 w-4 sm:h-5 sm:w-5" />
                 AI Koçu Keşfet
+              </a>
+              <a href="/game.html" className="group inline-flex items-center justify-center gap-2 border border-neon/50 bg-transparent px-7 py-4 text-xs font-black uppercase tracking-[0.12em] text-neon transition hover:border-neon hover:shadow-[0_0_24px_rgba(57,255,20,0.18)] sm:px-8 sm:py-5 sm:text-sm sm:tracking-[0.14em]">
+                Gücünü Göster
+                <Zap className="h-4 w-4 sm:h-5 sm:w-5" />
               </a>
             </motion.div>
           </motion.div>
